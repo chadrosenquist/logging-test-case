@@ -37,21 +37,34 @@ class LoggingTestCase(unittest.TestCase):
             before_failures = len(result.failures)
             before_errors = len(result.errors)
             
-            # Run the test case, capturing logs.
-            with self.assertLogs(logger=self.testlogger, level=self.testlevel) as capture_logs:
-                super(LoggingTestCase, self).run(result)
+            '''
+            Run the test case, capturing logs.
+            assertLogs throws an AssertionError if no logging is written.  Because there could be
+            test cases that do not log anything, this code captures that exception and ignores it.            
+            '''
+            try:
+                with self.assertLogs(logger=self.testlogger, level=self.testlevel) as capture_logs:
+                    super(LoggingTestCase, self).run(result)
+            except AssertionError as assertion_error:
+                if (len(capture_logs.records) == 0) and ("no logs of level" in str(assertion_error)):
+                    pass
+                else:
+                    raise
             
             after_failures = len(result.failures)
             after_errors = len(result.errors)           
         
             # If the number of failures or errors increased, add the logs to the output
             # for that test case.
-            if after_failures > before_failures:
-                result.failures[-1] = (result.failures[-1][0], result.failures[-1][1] + "\n" + self._capture_logs_to_string(capture_logs))
+            if len(capture_logs.records) != 0:
+                if after_failures > before_failures:
+                    result.failures[-1] = (result.failures[-1][0], result.failures[-1][1] + "\n" + self._capture_logs_to_string(capture_logs))
                 
-            elif after_errors > before_errors:
-                result.errors[-1] = (result.errors[-1][0], result.errors[-1][1] + "\n" + self._capture_logs_to_string(capture_logs))
+                elif after_errors > before_errors:
+                    result.errors[-1] = (result.errors[-1][0], result.errors[-1][1] + "\n" + self._capture_logs_to_string(capture_logs))
     
     
     def _capture_logs_to_string(self, capture_logs):
         return str(capture_logs.output)
+
+

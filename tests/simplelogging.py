@@ -8,7 +8,7 @@ import logging
 
 class SimpleLogging(object):
     '''
-    classdocs
+    Simple object used to test LoggingTestCase.
     '''
     CRITICAL_MESSAGE = 'SimpleLogging Critical'
     ERROR_MESSAGE = 'SimpleLogging Error'

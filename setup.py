@@ -6,5 +6,5 @@ setup(name='logging-unit-test',
       author='Chad Rosenquist',
       author_email='ChadRosenquist@hotmail.com',
       url='https://github.com/chadrosenquist/logging-unit-test',
-      packages=['loggingunittest']
+      packages=['loggingtestcase']
 )
