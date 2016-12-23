@@ -1,17 +1,8 @@
-#logging-test-case
-Production systems rely heavily upon logging.  Unit tests should verify logs are correct.
-`unittest.assertLogs()` allows developers to verify logs are correct.
-Including this context manager in every test case becomes tiresome.  Also, if the test fails, the logs are not displayed.
+'''
+Created on Dec 23, 2016
 
-This project provides the class `LoggingTestCase`, which inherits from `unittest.assertLogs()`.
-For every test run, logs are automatically captured to `self.captured_logs`.
-If the test fails, the contents of `self.captured_logs` are written to the test output for easy debugging.
-
-#Examples
-##Example1
-`examples/example1.py`
-
-```
+@author: Chad Rosenquist
+'''
 import unittest
 import logging
 from loggingtestcase import LoggingTestCase
@@ -65,15 +56,8 @@ class Example1(LoggingTestCase):
         '''
         self.logger.error("Failed to open file.")
         raise FileNotFoundError("Failed to open file.")
-```
 
-#Tests
-##Manual Tests
-`tests/manual.py`
 
-Run this file manually.  All the tests are commented out.  Uncomment and run each test one at a time.  Verify the console output.
-
-##Automated Tests
-TO DO!!!
-In order to write manual tests, I need to figure out how to test the test driver!?
-
+if __name__ == "__main__":
+    #import sys;sys.argv = ['', 'Test.testName']
+    unittest.main()

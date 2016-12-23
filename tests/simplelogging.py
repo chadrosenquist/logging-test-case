@@ -42,3 +42,10 @@ class SimpleLogging(object):
     
     def debug(self):
         self.logger.debug(self.DEBUG_MESSAGE)
+
+    def all(self):
+        self.critical()
+        self.error()
+        self.warning()
+        self.info()
+        self.debug()
