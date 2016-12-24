@@ -69,7 +69,7 @@ class LoggingTestCase(unittest.TestCase):
                 raise FileNotFoundError("Failed to open file.")
             FileNotFoundError: Failed to open file.
             
-            ['ERROR:examples.example1:Failed to open file.']
+            ERROR:examples.example1:Failed to open file.
             ----------------------------------------------------------------------        
             '''
             self.logger.error("Failed to open file.")
@@ -121,9 +121,6 @@ class LoggingTestCase(unittest.TestCase):
     
     
     def _capture_logs_to_string(self, capture_logs):
-        '''
-        TO DO: Format the output better.
-        '''
-        return str(capture_logs.output)
+        return "\n".join(capture_logs.output)
 
 

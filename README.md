@@ -60,7 +60,7 @@ class Example1(LoggingTestCase):
             raise FileNotFoundError("Failed to open file.")
         FileNotFoundError: Failed to open file.
         
-        ['ERROR:examples.example1:Failed to open file.']
+        ERROR:examples.example1:Failed to open file.
         ----------------------------------------------------------------------        
         '''
         self.logger.error("Failed to open file.")
