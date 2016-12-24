@@ -97,3 +97,6 @@ MANIFEST
 .project
 .pydevproject
 
+# Documentation
+doc/
+
