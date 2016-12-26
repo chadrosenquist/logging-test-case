@@ -28,14 +28,8 @@ Created on Dec 24, 2016
 @author: Chad Rosenquist
 '''
 
-import sys
 import subprocess
-
-from tests.manual import ManualTest
-from pip.status_codes import SUCCESS
-
-SUCCESS = 0
-FAILURE = 1
+import unittest
 
 def run_test(command):
     '''Runs a command'''
@@ -50,59 +44,50 @@ def run_test(command):
     
     return output
 
-
-def success01():
-    output = run_test("success01.py")
+class RunAllTests(unittest.TestCase):
     
-    if ("Ran 1 test" in output
-        and "OK" in output
-        and "SimpleLogging Critical" not in output
-        and "SimpleLogging Error" not in output
-        and "SimpleLogging Warning" not in output):
-        return SUCCESS
-    else:
-        print("\nsuccess01 failed.  Output:\n%s\n" % output)
-        return FAILURE
 
-
-def failure02():
-    output = run_test("failure02.py")
+    def test_success(self):
+        '''
+        No logs should be written to the console.
+        The test passed, so the logs are discarded.
+        '''
+        output = run_test("success01.py")
+        self.assertIn("OK", output)
+        self.assertNotIn("SimpleLogging Critical", output)
+        self.assertNotIn("SimpleLogging Error", output)
+        self.assertNotIn("SimpleLogging Warning", output)
     
-    if ("FAILED" in output
-        and "CRITICAL:tests.simplelogging:SimpleLogging Critical" in output
-        and "ERROR:tests.simplelogging:SimpleLogging Error" in output
-        and "WARNING:tests.simplelogging:SimpleLogging Warning" in output
-        and "INFO:tests.simplelogging:SimpleLogging Info" in output
-        and "False is not true" in output):
-        return SUCCESS
-    else:
-        print("\nfailure02 failed.  Output:\n%s\n" % output)
-        return FAILURE
+    def test_failure(self):
+        '''
+        This test fails.  Logs should be written to the console.
+        You should see all logs but debug because debug is not
+        enabled by default.
+        '''
+        output = run_test("failure02.py")
+        self.assertIn("FAILED", output)
+        self.assertIn("CRITICAL:tests.simplelogging:SimpleLogging Critical", output)
+        self.assertIn("ERROR:tests.simplelogging:SimpleLogging Error", output)
+        self.assertIn("WARNING:tests.simplelogging:SimpleLogging Warning", output)
+        self.assertIn("INFO:tests.simplelogging:SimpleLogging Info", output)
+        self.assertIn("False is not true", output)
 
+    def test_error(self):
+        '''
+        This test errors.  Logs should be written to the console.
+        You should see all logs but debug because debug is not
+        enabled by default.
+        '''
+        output = run_test("error03.py")
+        self.assertIn("FAILED", output)
+        self.assertIn("CRITICAL:tests.simplelogging:SimpleLogging Critical", output)
+        self.assertIn("ERROR:tests.simplelogging:SimpleLogging Error", output)
+        self.assertIn("WARNING:tests.simplelogging:SimpleLogging Warning", output)
+        self.assertIn("INFO:tests.simplelogging:SimpleLogging Info", output)
+        self.assertNotIn("DEBUG:tests.simplelogging:SimpleLogging Debug", output)
+        self.assertIn("test exception", output)
 
-def error03():
-    #output = run_test("error03.py")
-    
-    #print(output)  # TO DO!!!!
-    pass
-
-
-def main():
-    '''
-    Run each test case in class ManualTest.
-    '''
-    test_result = SUCCESS
-    
-    if success01() == FAILURE:
-        test_result = FAILURE
-    if failure02() == FAILURE:
-        test_result = FAILURE
-    if error03() == FAILURE:
-        test_result = FAILURE
-    
-    return test_result
 
 if __name__ == "__main__":
-    sys.exit(main())
-
-
+    #import sys;sys.argv = ['', 'Test.testName']
+    unittest.main()

@@ -2,7 +2,6 @@
 
 export PYTHONPATH=$PWD
 python tests/runall.py
-#python tests/loggingtestcase_tests.py
 if [ "$?" == "0" ]; then
     echo "Passed"
     exit 0

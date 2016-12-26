@@ -141,8 +141,7 @@ class LoggingTestCase(unittest.TestCase):
                 
                 elif after_errors > before_errors:
                     result.errors[-1] = (result.errors[-1][0], result.errors[-1][1] + "\n" + self._capture_logs_to_string(self.captured_logs))
-    
-    
+        
     def _capture_logs_to_string(self, capture_logs):
         return "\n".join(capture_logs.output)
 
