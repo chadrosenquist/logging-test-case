@@ -120,8 +120,6 @@ class ManualTest(LoggingTestCase):
     def test_failure_error_and_critical(self):
         '''
         This test fails.  Logs should be written to the console.
-        You should see all logs but debug because debug is not
-        enabled by default.
         
         Only the critical and error message should be written out.
         In __init__(), uncomment out the line:

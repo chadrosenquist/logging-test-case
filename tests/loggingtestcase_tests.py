@@ -21,7 +21,7 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 
-Runs all the tests.
+Tests LoggingTestCase.
 
 Created on Dec 24, 2016
 
@@ -33,7 +33,7 @@ import unittest
 
 def run_test(command):
     '''Runs a command'''
-    new_command = 'python tests/' + command  # Ex: python tests/success01.py
+    new_command = 'python ' + command  # Ex: python tests/success01.py
     output = None
     try:
         output = subprocess.check_output(new_command,
@@ -44,7 +44,7 @@ def run_test(command):
     
     return output
 
-class RunAllTests(unittest.TestCase):
+class LoggingTestCaseTest(unittest.TestCase):
     
 
     def test_success(self):
@@ -87,6 +87,50 @@ class RunAllTests(unittest.TestCase):
         self.assertNotIn("DEBUG:tests.simplelogging:SimpleLogging Debug", output)
         self.assertIn("test exception", output)
 
+    def test_success_no_logs(self):
+        '''
+        Tests success with no logs written out.
+        
+        By default, assertLogs() throws an exception if no logs are written.
+        So this test case verifies that exception is correctly handled.
+        '''
+        output = run_test("success_no_logs04.py")
+        self.assertIn("OK", output)
+        self.assertNotIn("AssertionError", output)
+
+    def test_failure_no_logs(self):
+        '''
+        This test fails with no logs.
+        '''
+        output = run_test("failure_no_logs05.py")
+        self.assertIn("FAIL", output)
+        self.assertIn("AssertionError", output)
+
+    def test_error_no_logs(self):
+        '''
+        This test errors with no logs.
+        '''
+        output = run_test("error_no_logs06.py")
+        self.assertIn("ERROR", output)
+        self.assertIn("test exception", output)
+
+    def test_captured_logs(self):
+        '''
+        Tests accessing the captured log files.
+        '''
+        output = run_test("captured_logs07.py")
+        self.assertIn("OK", output)
+        self.assertNotIn("FAILED", output)
+
+    def test_failure_error_and_critical(self):
+        '''
+        This test fails.  Logs should be written to the console.
+        Only the critical and error message should be written out.
+        '''
+        output = run_test("failure_err_and_crit08.py")
+        self.assertIn("CRITICAL:tests.simplelogging:SimpleLogging Critical", output)
+        self.assertIn("ERROR:tests.simplelogging:SimpleLogging Error", output)
+        self.assertNotIn("WARNING:tests.simplelogging:SimpleLogging Warning", output)        
 
 if __name__ == "__main__":
     #import sys;sys.argv = ['', 'Test.testName']

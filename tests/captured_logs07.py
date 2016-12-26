@@ -8,20 +8,18 @@ import unittest
 from loggingtestcase import LoggingTestCase
 from tests.simplelogging import SimpleLogging
 
-class Failure02(LoggingTestCase):
+class CapturedLogs07(LoggingTestCase):
 
 
     def setUp(self):
         self.simple_logging = SimpleLogging()
-
-    def test_failure(self):
+    
+    def test_captured_logs(self):
         '''
-        This test fails.  Logs should be written to the console.
-        You should see all logs but debug because debug is not
-        enabled by default.
+        Tests accessing the captured log files.
         '''
-        self.simple_logging.all()
-        self.assertTrue(False)
+        self.simple_logging.warning()
+        self.assertEqual(self.captured_logs.output, ['WARNING:tests.simplelogging:SimpleLogging Warning'])
 
 
 if __name__ == "__main__":

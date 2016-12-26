@@ -69,26 +69,22 @@ class Example1(LoggingTestCase):
 
 #Tests
 ##Manual Tests
-`tests/manual.py`
+###`tests/manual.py`
 
 Run this file manually.  All the tests are commented out.  Uncomment and run each test one at a time.  Verify the console output.
 
-I did not name this module `manual_tests.py` because this test is not meant to be run automatically.
+This module is not named `manual_tests.py` because these tests are not meant to be run automatically.
 
 ##Automated Tests
-`tests/runall.py`
-
-This module runs all the automated tests.  It uses `subprocess.check_output` to run each test case one at a time, capturing the output.
-the output is examined to verify it is correct.
-
-Even though automated tests are included, it is still a good idea to run the manual tests and visually look at the output of each test case.
-Also, the automated tests use a simple, custom test driver that is not nearly as robust as `unittest`, so running additional
-manual testing is useful.
-
-To run the tests from the command line, using GitBash on Windows:
+##runtest.sh
+To run all the tests from the command line, using GitBash on Windows:
 ```
 cd <repository root>
 ./runtests.sh
 ```
-  
+###tests/loggingtestcase_tests.py
 
+This module tests class `LoggingTestCase`.  It uses `subprocess.check_output` to run each test case one at a time, capturing the output.
+The output is examined to verify it is correct.
+
+Even though automated tests are included, it is still a good idea to run the manual tests and visually look at the output of each test case.

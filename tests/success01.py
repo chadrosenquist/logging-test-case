@@ -13,8 +13,7 @@ class Success01(LoggingTestCase):
 
     def setUp(self):
         self.simple_logging = SimpleLogging()
-
-
+    
     def test_success(self):
         '''
         No logs should be written to the console.

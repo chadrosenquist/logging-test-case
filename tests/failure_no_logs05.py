@@ -8,19 +8,16 @@ import unittest
 from loggingtestcase import LoggingTestCase
 from tests.simplelogging import SimpleLogging
 
-class Failure02(LoggingTestCase):
+class FailureNoLogs05(LoggingTestCase):
 
 
     def setUp(self):
         self.simple_logging = SimpleLogging()
 
-    def test_failure(self):
+    def test_failure_no_logs(self):
         '''
-        This test fails.  Logs should be written to the console.
-        You should see all logs but debug because debug is not
-        enabled by default.
+        This test fails with no logs.
         '''
-        self.simple_logging.all()
         self.assertTrue(False)
 
 

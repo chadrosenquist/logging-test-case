@@ -14,7 +14,6 @@ class Error03(LoggingTestCase):
     def setUp(self):
         self.simple_logging = SimpleLogging()
 
-
     def test_error(self):
         '''
         This test errors.  Logs should be written to the console.
