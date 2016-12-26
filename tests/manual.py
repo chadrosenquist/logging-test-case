@@ -29,11 +29,10 @@ Created on Dec 23, 2016
 '''
 import unittest
 
-
 from loggingtestcase import LoggingTestCase
 from tests.simplelogging import SimpleLogging
 
-class LoggingTestCaseTest(LoggingTestCase):
+class ManualTest(LoggingTestCase):
     '''
     This class is for manually testing LoggingTestCase.
     By default, all the tests are disabled.
@@ -50,7 +49,6 @@ class LoggingTestCaseTest(LoggingTestCase):
     
     def setUp(self):
         self.simple_logging = SimpleLogging()
-        pass
 
 
     def tearDown(self):
