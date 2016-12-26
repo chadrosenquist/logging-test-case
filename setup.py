@@ -1,7 +1,7 @@
 from distutils.core import setup
 
 setup(name='logging-test-case',
-      version='1.0',
+      version='1.1-SNAPSHOT',
       description='Provides class LoggingTestCase to help test log files.',
       author='Chad Rosenquist',
       author_email='ChadRosenquist@hotmail.com',
