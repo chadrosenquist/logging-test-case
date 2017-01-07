@@ -7,6 +7,15 @@ This project provides the class `LoggingTestCase`, which inherits from `unittest
 For every test run, logs are automatically captured to `self.captured_logs`.
 If the test fails, the contents of `self.captured_logs` are written to the test output for easy debugging.
 
+#Installation
+This package is at pypi at:
+
+https://pypi.python.org/pypi/logging-test-case
+
+To install using pip:
+
+`pip install logging-test-case`
+
 #Examples
 ##Example1
 `examples/example1.py`
