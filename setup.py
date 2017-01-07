@@ -1,4 +1,5 @@
-from distutils.core import setup
+#from distutils.core import setup
+from setuptools import setup
 
 setup(name='logging-test-case',
       version='1.1-SNAPSHOT',
