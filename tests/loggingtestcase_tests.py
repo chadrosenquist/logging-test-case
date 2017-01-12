@@ -32,8 +32,8 @@ import subprocess
 import unittest
 
 def run_test(command):
-    '''Runs a command'''
-    new_command = 'python ' + command  # Ex: python tests/success01.py
+    '''Runs a test case and returns the output.'''
+    new_command = 'python -m unittest ' + command
     output = None
     try:
         output = subprocess.check_output(new_command,
@@ -52,7 +52,7 @@ class LoggingTestCaseTest(unittest.TestCase):
         No logs should be written to the console.
         The test passed, so the logs are discarded.
         '''
-        output = run_test("success01.py")
+        output = run_test("tests.simpleloggingtests.SimpleLoggingTests.test_success")
         self.assertIn("OK", output)
         self.assertNotIn("SimpleLogging Critical", output)
         self.assertNotIn("SimpleLogging Error", output)
@@ -64,7 +64,7 @@ class LoggingTestCaseTest(unittest.TestCase):
         You should see all logs but debug because debug is not
         enabled by default.
         '''
-        output = run_test("failure02.py")
+        output = run_test("tests.simpleloggingtests.SimpleLoggingTests.test_failure")
         self.assertIn("FAILED", output)
         self.assertIn("CRITICAL:tests.simplelogging:SimpleLogging Critical", output)
         self.assertIn("ERROR:tests.simplelogging:SimpleLogging Error", output)
@@ -78,7 +78,7 @@ class LoggingTestCaseTest(unittest.TestCase):
         You should see all logs but debug because debug is not
         enabled by default.
         '''
-        output = run_test("error03.py")
+        output = run_test("tests.simpleloggingtests.SimpleLoggingTests.test_error")
         self.assertIn("FAILED", output)
         self.assertIn("CRITICAL:tests.simplelogging:SimpleLogging Critical", output)
         self.assertIn("ERROR:tests.simplelogging:SimpleLogging Error", output)
@@ -94,7 +94,7 @@ class LoggingTestCaseTest(unittest.TestCase):
         By default, assertLogs() throws an exception if no logs are written.
         So this test case verifies that exception is correctly handled.
         '''
-        output = run_test("success_no_logs04.py")
+        output = run_test("tests.simpleloggingtests.SimpleLoggingTests.test_success_no_logs")
         self.assertIn("OK", output)
         self.assertNotIn("AssertionError", output)
 
@@ -102,7 +102,7 @@ class LoggingTestCaseTest(unittest.TestCase):
         '''
         This test fails with no logs.
         '''
-        output = run_test("failure_no_logs05.py")
+        output = run_test("tests.simpleloggingtests.SimpleLoggingTests.test_failure_no_logs")
         self.assertIn("FAIL", output)
         self.assertIn("AssertionError", output)
 
@@ -110,7 +110,7 @@ class LoggingTestCaseTest(unittest.TestCase):
         '''
         This test errors with no logs.
         '''
-        output = run_test("error_no_logs06.py")
+        output = run_test("tests.simpleloggingtests.SimpleLoggingTests.test_error_no_logs")
         self.assertIn("ERROR", output)
         self.assertIn("test exception", output)
 
@@ -118,7 +118,7 @@ class LoggingTestCaseTest(unittest.TestCase):
         '''
         Tests accessing the captured log files.
         '''
-        output = run_test("captured_logs07.py")
+        output = run_test("tests.simpleloggingtests.SimpleLoggingTests.test_captured_logs")
         self.assertIn("OK", output)
         self.assertNotIn("FAILED", output)
 
@@ -127,7 +127,7 @@ class LoggingTestCaseTest(unittest.TestCase):
         This test fails.  Logs should be written to the console.
         Only the critical and error message should be written out.
         '''
-        output = run_test("failure_err_and_crit08.py")
+        output = run_test("tests.simpleloggingtests.SimpleLoggingTestsErrAndCrit.test_failure_error_and_critical")
         self.assertIn("CRITICAL:tests.simplelogging:SimpleLogging Critical", output)
         self.assertIn("ERROR:tests.simplelogging:SimpleLogging Error", output)
         self.assertNotIn("WARNING:tests.simplelogging:SimpleLogging Warning", output)        
@@ -135,3 +135,4 @@ class LoggingTestCaseTest(unittest.TestCase):
 if __name__ == "__main__":
     #import sys;sys.argv = ['', 'Test.testName']
     unittest.main()
+

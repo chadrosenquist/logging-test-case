@@ -94,6 +94,6 @@ cd <repository root>
 ###tests/loggingtestcase_tests.py
 
 This module tests class `LoggingTestCase`.  It uses `subprocess.check_output` to run each test case one at a time, capturing the output.
-The output is examined to verify it is correct.
+The output is examined to verify it is correct.  `loggingtestcase_tests.py` run tests in module `simpleloggingtests.py`.
 
 Even though automated tests are included, it is still a good idea to run the manual tests and visually look at the output of each test case.
