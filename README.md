@@ -49,9 +49,9 @@ class Example1(LoggingTestCase):
         '''
         self.logger.info("Starting request...")
         self.logger.info("Done with request.")
-        self.assertEquals(self.captured_logs.output,
-                          ['INFO:examples.example1:Starting request...',
-                           'INFO:examples.example1:Done with request.'])
+        self.assertEqual(self.captured_logs.output,
+                         ['INFO:examples.example1:Starting request...',
+                          'INFO:examples.example1:Done with request.'])
     
     def test_fail(self):
         '''
