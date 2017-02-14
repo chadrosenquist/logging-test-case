@@ -100,3 +100,6 @@ MANIFEST
 # Documentation
 doc/
 
+# PyCharm
+.idea/
+

@@ -1,4 +1,4 @@
-'''
+"""
 MIT License
 
 Copyright (c) 2016 Chad Rosenquist
@@ -26,13 +26,13 @@ Tests LoggingTestCase.
 Created on Dec 24, 2016
 
 @author: Chad Rosenquist
-'''
+"""
 
 import subprocess
 import unittest
 
 def run_test(command):
-    '''Runs a test case and returns the output.'''
+    """Runs a test case and returns the output."""
     new_command = 'python -m unittest ' + command
     output = None
     try:
@@ -44,14 +44,15 @@ def run_test(command):
     
     return output
 
+
 class LoggingTestCaseTest(unittest.TestCase):
     
 
     def test_success(self):
-        '''
+        """
         No logs should be written to the console.
         The test passed, so the logs are discarded.
-        '''
+        """
         output = run_test("tests.simpleloggingtests.SimpleLoggingTests.test_success")
         self.assertIn("OK", output)
         self.assertNotIn("SimpleLogging Critical", output)
@@ -59,11 +60,11 @@ class LoggingTestCaseTest(unittest.TestCase):
         self.assertNotIn("SimpleLogging Warning", output)
     
     def test_failure(self):
-        '''
+        """
         This test fails.  Logs should be written to the console.
         You should see all logs but debug because debug is not
         enabled by default.
-        '''
+        """
         output = run_test("tests.simpleloggingtests.SimpleLoggingTests.test_failure")
         self.assertIn("FAILED", output)
         self.assertIn("CRITICAL:tests.simplelogging:SimpleLogging Critical", output)
@@ -73,11 +74,11 @@ class LoggingTestCaseTest(unittest.TestCase):
         self.assertIn("False is not true", output)
 
     def test_error(self):
-        '''
+        """
         This test errors.  Logs should be written to the console.
         You should see all logs but debug because debug is not
         enabled by default.
-        '''
+        """
         output = run_test("tests.simpleloggingtests.SimpleLoggingTests.test_error")
         self.assertIn("FAILED", output)
         self.assertIn("CRITICAL:tests.simplelogging:SimpleLogging Critical", output)
@@ -88,45 +89,45 @@ class LoggingTestCaseTest(unittest.TestCase):
         self.assertIn("test exception", output)
 
     def test_success_no_logs(self):
-        '''
+        """
         Tests success with no logs written out.
         
         By default, assertLogs() throws an exception if no logs are written.
         So this test case verifies that exception is correctly handled.
-        '''
+        """
         output = run_test("tests.simpleloggingtests.SimpleLoggingTests.test_success_no_logs")
         self.assertIn("OK", output)
         self.assertNotIn("AssertionError", output)
 
     def test_failure_no_logs(self):
-        '''
+        """
         This test fails with no logs.
-        '''
+        """
         output = run_test("tests.simpleloggingtests.SimpleLoggingTests.test_failure_no_logs")
         self.assertIn("FAIL", output)
         self.assertIn("AssertionError", output)
 
     def test_error_no_logs(self):
-        '''
+        """
         This test errors with no logs.
-        '''
+        """
         output = run_test("tests.simpleloggingtests.SimpleLoggingTests.test_error_no_logs")
         self.assertIn("ERROR", output)
         self.assertIn("test exception", output)
 
     def test_captured_logs(self):
-        '''
+        """
         Tests accessing the captured log files.
-        '''
+        """
         output = run_test("tests.simpleloggingtests.SimpleLoggingTests.test_captured_logs")
         self.assertIn("OK", output)
         self.assertNotIn("FAILED", output)
 
     def test_failure_error_and_critical(self):
-        '''
+        """
         This test fails.  Logs should be written to the console.
         Only the critical and error message should be written out.
-        '''
+        """
         output = run_test("tests.simpleloggingtests.SimpleLoggingTestsErrAndCrit.test_failure_error_and_critical")
         self.assertIn("CRITICAL:tests.simplelogging:SimpleLogging Critical", output)
         self.assertIn("ERROR:tests.simplelogging:SimpleLogging Error", output)
