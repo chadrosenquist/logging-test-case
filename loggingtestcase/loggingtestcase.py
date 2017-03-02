@@ -135,7 +135,7 @@ class LoggingTestCase(unittest.TestCase):
             
             # Run the test case, capturing logs.
             # assertLogs throws an AssertionError if no logging is written.  Because there could be
-            # test cases that do not log anything, this code captures that exception and ignores it.                    
+            # test cases that do not log anything, this code captures that exception and ignores it.
             try:
                 with self.assertLogs(logger=self.testlogger, level=self.testlevel) as self.captured_logs:
                     super(LoggingTestCase, self).run(result)
@@ -144,21 +144,21 @@ class LoggingTestCase(unittest.TestCase):
                     pass
                 else:
                     raise
-            
+
             after_failures = len(result.failures)
-            after_errors = len(result.errors)           
-        
+            after_errors = len(result.errors)
+
             # If the number of failures or errors increased, add the logs to the output
             # for that test case.
             if len(self.captured_logs.records) != 0:
                 if after_failures > before_failures:
-                    result.failures[-1] = (result.failures[-1][0], result.failures[-1][1] + "\n" + self._capture_logs_to_string(self.captured_logs))
-                
+                    result.failures[-1] = (result.failures[-1][0], result.failures[-1][1] + "\n"
+                                           + self._capture_logs_to_string(self.captured_logs))
+
                 elif after_errors > before_errors:
-                    result.errors[-1] = (result.errors[-1][0], result.errors[-1][1] + "\n" + self._capture_logs_to_string(self.captured_logs))
+                    result.errors[-1] = (result.errors[-1][0], result.errors[-1][1] + "\n"
+                                         + self._capture_logs_to_string(self.captured_logs))
 
     @staticmethod
     def _capture_logs_to_string(capture_logs):
         return "\n".join(capture_logs.output)
-
-
