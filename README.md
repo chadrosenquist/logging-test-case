@@ -1,4 +1,4 @@
-#logging-test-case
+# logging-test-case
 Production systems rely heavily upon logging.  Unit tests should verify logs are correct.
 `unittest.assertLogs()` allows developers to verify logs are correct.
 Including this context manager in every test case becomes tiresome.  Also, if the test fails, the logs are not displayed.
@@ -7,7 +7,7 @@ This project provides the class `LoggingTestCase`, which inherits from `unittest
 For every test run, logs are automatically captured to `self.captured_logs`.
 If the test fails, the contents of `self.captured_logs` are written to the test output for easy debugging.
 
-#Installation
+# Installation
 This package is at pypi at:
 
 https://pypi.python.org/pypi/logging-test-case
@@ -16,8 +16,8 @@ To install using pip:
 
 `pip install logging-test-case`
 
-#Examples
-##Example1
+# Examples
+## Example1
 `examples/example1.py`
 
 ```
@@ -76,21 +76,21 @@ class Example1(LoggingTestCase):
         raise FileNotFoundError("Failed to open file.")
 ```
 
-#Tests
-##Manual Tests
-###`tests/manual.py`
+# Tests
+## Manual Tests
+### `tests/manual.py`
 
 Run this file manually.  All the tests are commented out.  Uncomment and run each test one at a time.  Verify the console output.
 
 This module is not named `manual_test.py` because these tests are not meant to be run automatically.
 
-##Automated Tests
-##runtest.sh
+## Automated Tests
+## runtest.sh
 To run all the tests from the command line, simply use pytest:
 ```
 pytest
 ```
-###tests/loggingtestcase_test.py
+### tests/loggingtestcase_test.py
 
 This module tests class `LoggingTestCase`.  It uses `subprocess.check_output` to run each test case one at a time, capturing the output.
 The output is examined to verify it is correct.  `loggingtestcase_test.py` run tests in module `simpleloggingtests.py`.
