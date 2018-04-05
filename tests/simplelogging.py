@@ -1,4 +1,4 @@
-'''
+"""
 MIT License
 
 Copyright (c) 2016 Chad Rosenquist
@@ -24,28 +24,27 @@ SOFTWARE.
 Created on Dec 21, 2016
 
 @author: Chad Rosenquist
-'''
+"""
 
 import logging
 
+
 class SimpleLogging(object):
-    '''
+    """
     Simple object used to test LoggingTestCase.
-    '''
+    """
     CRITICAL_MESSAGE = 'SimpleLogging Critical'
     ERROR_MESSAGE = 'SimpleLogging Error'
     WARNING_MESSAGE = 'SimpleLogging Warning'
     INFO_MESSAGE = 'SimpleLogging Info'
     DEBUG_MESSAGE = 'SimpleLogging Debug'
-    
 
     def __init__(self):
-        '''
+        """
         Constructor
-        '''
+        """
         self.__logger = logging.getLogger(__name__)
-    
-    
+
     @property
     def logger(self):
         return self.__logger

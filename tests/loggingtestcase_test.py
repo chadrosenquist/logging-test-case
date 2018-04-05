@@ -31,10 +31,10 @@ Created on Dec 24, 2016
 import subprocess
 import unittest
 
+
 def run_test(command):
     """Runs a test case and returns the output."""
     new_command = 'python -m unittest ' + command
-    output = None
     try:
         output = subprocess.check_output(new_command,
                                          stderr=subprocess.STDOUT,
@@ -46,7 +46,6 @@ def run_test(command):
 
 
 class LoggingTestCaseTest(unittest.TestCase):
-    
 
     def test_success(self):
         """
@@ -133,7 +132,7 @@ class LoggingTestCaseTest(unittest.TestCase):
         self.assertIn("ERROR:tests.simplelogging:SimpleLogging Error", output)
         self.assertNotIn("WARNING:tests.simplelogging:SimpleLogging Warning", output)        
 
-if __name__ == "__main__":
-    #import sys;sys.argv = ['', 'Test.testName']
-    unittest.main()
 
+if __name__ == "__main__":
+    # import sys;sys.argv = ['', 'Test.testName']
+    unittest.main()

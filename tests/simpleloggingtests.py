@@ -1,4 +1,4 @@
-'''
+"""
 MIT License
 
 Copyright (c) 2016 Chad Rosenquist
@@ -24,78 +24,78 @@ SOFTWARE.
 Created on Dec 26, 2016
 
 @author: Chad Rosenquist
-'''
+"""
 import logging
 
 from loggingtestcase import LoggingTestCase
 from tests.simplelogging import SimpleLogging
 
-class SimpleLoggingTests(LoggingTestCase):
 
+class SimpleLoggingTests(LoggingTestCase):
 
     def setUp(self):
         self.simple_logging = SimpleLogging()
     
     def test_success(self):
-        '''
+        """
         No logs should be written to the console.
         The test passed, so the logs are discarded.
-        '''
+        """
         self.simple_logging.all()
         self.assertTrue(True)
     
     def test_failure(self):
-        '''
+        """
         This test fails.  Logs should be written to the console.
         You should see all logs but debug because debug is not
         enabled by default.
-        '''
+        """
         self.simple_logging.all()
         self.assertTrue(False)
 
     def test_error(self):
-        '''
+        """
         This test errors.  Logs should be written to the console.
         You should see all logs but debug because debug is not
         enabled by default.
-        '''
+        """
         self.simple_logging.all()
         raise Exception("test exception")
 
     def test_success_no_logs(self):
-        '''
+        """
         Tests success with no logs written out.
         
         By default, assertLogs() throws an exception if no logs are written.
         So this test case verifies that exception is correctly handled.
-        '''
+        """
         self.assertTrue(True)
 
     def test_failure_no_logs(self):
-        '''
+        """
         This test fails with no logs.
-        '''
+        """
         self.assertTrue(False)
 
     def test_error_no_logs(self):
-        '''
+        """
         This test errors with no logs.
-        '''
+        """
         raise Exception("test exception")
 
     def test_captured_logs(self):
-        '''
+        """
         Tests accessing the captured log files.
-        '''
+        """
         self.simple_logging.warning()
         self.assertEqual(self.captured_logs.output, ['WARNING:tests.simplelogging:SimpleLogging Warning'])
 
 
 class SimpleLoggingTestsErrAndCrit(LoggingTestCase):
-    '''
+    """
     The constructor sets the log level to ERROR.  Only CRITICAL
     and ERROR should be written out.
-    '''
+    """
     def __init__(self, methodName='runTest', testlogger=None, testlevel=None):
         testlevel = logging.ERROR
         super().__init__(methodName, testlogger, testlevel)
@@ -104,9 +104,9 @@ class SimpleLoggingTestsErrAndCrit(LoggingTestCase):
         self.simple_logging = SimpleLogging()
 
     def test_failure_error_and_critical(self):
-        '''
+        """
         This test fails.  Logs should be written to the console.
         Only the critical and error message should be written out.
-        '''
+        """
         self.simple_logging.all()
         self.assertTrue(False)

@@ -1,4 +1,4 @@
-'''
+"""
 MIT License
 
 Copyright (c) 2016 Chad Rosenquist
@@ -24,19 +24,20 @@ SOFTWARE.
 Created on Dec 23, 2016
 
 @author: Chad Rosenquist
-'''
+"""
 import unittest
 import logging
 from loggingtestcase import LoggingTestCase
 
+
 class Example1(LoggingTestCase):
 
     def __init__(self, methodName='runTest', testlogger=None, testlevel=None):
-        '''
+        """
         To change the logger or log level, override __init__.
         By default, the root logger is used and the log level is logging.INFO.
-        '''
-        #testlevel = logging.ERROR
+        """
+        # testlevel = logging.ERROR
         super().__init__(methodName, testlogger, testlevel)
 
     def setUp(self):
@@ -44,13 +45,13 @@ class Example1(LoggingTestCase):
         pass
 
     def test_pass(self):
-        '''
+        """
         Run a test that logs an info message and
         verify the info is correctly logged.
         
         Notice that the info message is not logged to the console.
         When all your tests pass, your console output is nice and clean.
-        '''
+        """
         self.logger.info("Starting request...")
         self.logger.info("Done with request.")
         self.assertEqual(self.captured_logs.output,
@@ -58,7 +59,7 @@ class Example1(LoggingTestCase):
                           'INFO:examples.example1:Done with request.'])
     
     def test_fail(self):
-        '''
+        """
         Run a test that fails.
         
         Notice that the error message is logged to the console.
@@ -75,11 +76,11 @@ class Example1(LoggingTestCase):
         
         ERROR:examples.example1:Failed to open file.
         ----------------------------------------------------------------------        
-        '''
+        """
         self.logger.error("Failed to open file.")
         raise FileNotFoundError("Failed to open file.")
 
 
 if __name__ == "__main__":
-    #import sys;sys.argv = ['', 'Test.testName']
+    # import sys;sys.argv = ['', 'Test.testName']
     unittest.main()
