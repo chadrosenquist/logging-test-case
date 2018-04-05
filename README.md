@@ -89,7 +89,6 @@ Run this file manually.  All the tests are commented out.  Uncomment and run eac
 This module is not named `manual_test.py` because these tests are not meant to be run automatically.
 
 ## Automated Tests
-## runtest.sh
 To run all the tests from the command line, simply use pytest:
 ```
 pytest
