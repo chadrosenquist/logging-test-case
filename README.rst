@@ -186,7 +186,7 @@ are automatically available in ``self.captured_logs.output``.
 Changelog
 =========
 
-release-1.1.1
+release-1.1.2
 -------------
 
 Added ``README.rst`` so this readme shows up on PyPI.

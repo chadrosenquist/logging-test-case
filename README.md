@@ -163,7 +163,7 @@ decorators or context managers.  The captured logs are automatically available i
 `self.captured_logs.output`.
 
 # Changelog
-## release-1.1.1
+## release-1.1.2
 Added `README.rst` so this readme shows up on PyPI.
 
 ## release-1.1
