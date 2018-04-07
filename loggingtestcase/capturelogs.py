@@ -28,17 +28,35 @@ Created on April 4, 2018
 
 import logging
 from functools import wraps
+from enum import Enum, auto
 
 
-def capturelogs(logger=None, level=None):
+class DisplayLogs(Enum):
+    """Determines when to display logs.
+
+    :Values:
+        * NEVER: Never display the logs.  The logs will always be discarded.
+        * FAILURE: Display the logs only if the test case fails.
+        * ALWAYS: Always displays the logs - pass or fail.
+    """
+    NEVER = auto()
+    FAILURE = auto()
+    ALWAYS = auto()
+
+
+def capturelogs(logger=None, level=None, display_logs=DisplayLogs.FAILURE):
     """Very similar to self.assertLogs() except can be used a function decorator, reducing clutter in test functions.
 
     :param logger: Name of logger, or an actual logger.  Defaults to root logger.
-    :param level: Log level as a text string.
+    :param level: Log level as a text string.  Defaults to 'INFO'.
+    :param DisplayLogs display_logs:  Determines when to display logs.
+        * DisplayLogs.NEVER: Never display the logs.  The logs will always be discarded.
+        * DisplayLogs.FAILURE: Display the logs only if the test case fails.
+        * DisplayLogs.ALWAYS: Always displays the logs - pass or fail.
 
-    Example:
+    Example::
+
         import logging
-
         from loggingtestcase import capturelogs
 
         @capturelogs('foo', level='INFO')
@@ -50,25 +68,31 @@ def capturelogs(logger=None, level=None):
                                            'ERROR:foo.bar:second message'])
             self.assertEqual(logs.records[0].message, 'first message')
             self.assertEqual(logs.records[1].message, 'second message')
+
+
+    Always display logs example::
+
+        import logging
+        from loggingtestcase import capturelogs, DisplayLogs
+
+        @capturelogs('foo', level='INFO', display_logs=DisplayLogs.ALWAYS)
+        def test_always_display_logs(self, logs):
+            logging.getLogger('foo').info('first message')
+            self.assertTrue(False)
+            self.assertEqual(logs.output, ['INFO:foo:first message'])
+
     """
     def decorate(func):
-        # Set the logger.
-        if isinstance(logger, logging.Logger):
-            log = logger
-        else:
-            log = logging.getLogger(logger)
-
-        # Set the log level.
-        if level:
-            log_level = logging._nameToLevel.get(level, level)
-        else:
-            log_level = logging.INFO
+        log = _set_the_logger(logger)
+        log_level = _set_the_level(level)
 
         @wraps(func)
         def wrapper(*args, **kwargs):
+            assertion_error_raised = False
+
             # Capture the logs.
             formatter = logging.Formatter("%(levelname)s:%(name)s:%(message)s")
-            handler = _CaptureLogsHandlers()
+            handler = _CaptureLogsHandler()
             handler.setFormatter(formatter)
             old_handlers = log.handlers[:]
             old_level = log.level
@@ -82,13 +106,38 @@ def capturelogs(logger=None, level=None):
                 return_value = func(*args, handler.captured_logs, **kwargs)
                 return return_value
 
+            except Exception:
+                assertion_error_raised = True
+                raise
+
             finally:
                 # Restore the logs.
                 log.handlers = old_handlers
                 log.level = old_level
                 log.propagate = old_propagate
+
+                # Print logs to the original handler.
+                if display_logs is DisplayLogs.ALWAYS \
+                        or (display_logs is DisplayLogs.FAILURE and assertion_error_raised):
+                    for record in handler.captured_logs.records:
+                        log.log(record.levelno, record.msg)
         return wrapper
     return decorate
+
+
+def _set_the_logger(logger):
+    if isinstance(logger, logging.Logger):
+        return logger
+    else:
+        return logging.getLogger(logger)
+
+
+def _set_the_level(level):
+    if level:
+        # noinspection PyProtectedMember
+        return logging._nameToLevel.get(level, level)
+    else:
+        return logging.INFO
 
 
 class _TheCapturedLogs(object):
@@ -101,9 +150,8 @@ class _TheCapturedLogs(object):
         return 'records = {0} output = {1}'.format(self.records, self.output)
 
 
-class _CaptureLogsHandlers(logging.Handler):
+class _CaptureLogsHandler(logging.Handler):
     """Captures the logs and stores them so they can be inspected later."""
-
     def __init__(self):
         logging.Handler.__init__(self)
         self.captured_logs = _TheCapturedLogs()
@@ -115,5 +163,3 @@ class _CaptureLogsHandlers(logging.Handler):
         self.captured_logs.records.append(record)
         message = self.format(record)
         self.captured_logs.output.append(message)
-
-

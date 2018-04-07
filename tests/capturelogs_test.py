@@ -30,8 +30,9 @@ Created on April 4, 2018
 
 import unittest
 import logging
+from io import StringIO
 
-from loggingtestcase import capturelogs
+from loggingtestcase import capturelogs, DisplayLogs
 
 
 class CaptureLogsTestCase(unittest.TestCase):
@@ -40,7 +41,6 @@ class CaptureLogsTestCase(unittest.TestCase):
         """Verify logs using @capturelogs decorator."""
         logging.getLogger('foo').info('first message')
         logging.getLogger('foo.bar').error('second message')
-
         self.assertEqual(logs.output, ['INFO:foo:first message',
                                        'ERROR:foo.bar:second message'])
         self.assertEqual(logs.records[0].message, 'first message')
@@ -98,12 +98,97 @@ class CaptureLogsTestCase(unittest.TestCase):
         return_value = self._arguments_and_return('one', keyword_one='two')
         self.assertEqual(return_value, 'one | two')
 
+    # noinspection PyUnusedLocal
     @capturelogs('foo', level='INFO')
     def _arguments_and_return(self, argument1, logs, keyword_one='hello'):
-        _ = logs  # get rid of warning
         return '{0} | {1}'.format(argument1, keyword_one)
 
-    # CHAD: Add optional parameter to fail or not fail if no logs are generated.
+
+class DisplayLogsTestCase(unittest.TestCase):
+    """Tests for displaying the logs.
+
+    The code is actually very simple, but there is a lot of test code
+    so place this into another class.
+    """
+    @classmethod
+    def _set_stream_handler(cls):
+        foo_logger = logging.getLogger('foo')
+        stream = StringIO()
+        stream_handler = logging.StreamHandler(stream)
+        stream_formatter = logging.Formatter("%(levelname)s:%(name)s:%(message)s")
+        stream_handler.setFormatter(stream_formatter)
+        foo_logger.addHandler(stream_handler)
+
+        return stream
+
+    def test_display_logs_if_failure(self):
+        """If the test fails, the logs are displayed."""
+        stream = self._set_stream_handler()
+
+        # Run a test that writes to the logs and fails.
+        with self.assertRaises(AssertionError):
+            self._failed_test()
+
+        # Verify the logs are captured.
+        self.assertMultiLineEqual(stream.getvalue(),
+                                  'INFO:foo:Failed to open file!\nDEBUG:foo:Check file permissions.\n')
+
+    # noinspection PyUnusedLocal
+    @capturelogs('foo', level='DEBUG')
+    def _failed_test(self, logs):
+        logging.getLogger('foo').info('Failed to open file!')
+        logging.getLogger('foo').debug('Check file permissions.')
+        self.assertTrue(False)
+
+    def test_discard_logs_if_failure(self):
+        """If the test fails, the logs are discarded."""
+        stream = self._set_stream_handler()
+
+        # Run a test that writes to the logs and fails.
+        with self.assertRaises(AssertionError):
+            self._failed_test_discard()
+
+        # Verify the logs are not captured.
+        self.assertEqual(stream.getvalue(), '')
+
+    # noinspection PyUnusedLocal
+    @capturelogs('foo', level='DEBUG', display_logs=DisplayLogs.NEVER)
+    def _failed_test_discard(self, logs):
+        logging.getLogger('foo').info('Failed to open file!')
+        logging.getLogger('foo').debug('Check file permissions.')
+        self.assertTrue(False)
+
+    def test_discard_logs_if_success(self):
+        """If the test passes, the logs are discarded."""
+        stream = self._set_stream_handler()
+
+        # Run a test that writes to the logs and fails.
+        self._success_test_discard()
+
+        # Verify the logs are not captured.
+        self.assertEqual(stream.getvalue(), '')
+
+    # noinspection PyUnusedLocal
+    @capturelogs('foo', level='DEBUG')
+    def _success_test_discard(self, logs):
+        logging.getLogger('foo').info('Failed to open file!')
+        logging.getLogger('foo').debug('Check file permissions.')
+
+    def test_display_logs_if_success(self):
+        """If the test passes, the logs are displayed."""
+        stream = self._set_stream_handler()
+
+        # Run a test that writes to the logs and fails.
+        self._success_test_display()
+
+        # Verify the logs are not captured.
+        self.assertEqual(stream.getvalue(), 'INFO:foo:Failed to open file!\nDEBUG:foo:Check file permissions.\n')
+
+    # noinspection PyUnusedLocal
+    @capturelogs('foo', level='DEBUG', display_logs=DisplayLogs.ALWAYS)
+    def _success_test_display(self, logs):
+        logging.getLogger('foo').info('Failed to open file!')
+        logging.getLogger('foo').debug('Check file permissions.')
 
 
 if __name__ == '__main__':

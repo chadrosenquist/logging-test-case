@@ -3,9 +3,17 @@ Production systems rely heavily upon logging.  Unit tests should verify logs are
 `unittest.assertLogs()` allows developers to verify logs are correct.
 Including this context manager in every test case becomes tiresome.  Also, if the test fails, the logs are not displayed.
 
+This project provides the function decorator `@capturelogs`.
+`@capturelogs` is similar to `unittest.assertLogs()`, but
+it is a function decorator, reducing the clutter inside the test function.
+
 This project provides the class `LoggingTestCase`, which inherits from `unittest.assertLogs()`.
 For every test run, logs are automatically captured to `self.captured_logs`.
 If the test fails, the contents of `self.captured_logs` are written to the test output for easy debugging.
+
+* Use `@capturelogs` if only a few tests involve log files.
+* Use `LoggingTestCase` if most of the tests involve logs.  This avoids putting a function
+decorator for each function.
 
 # Installation
 This package is at pypi at:
@@ -19,7 +27,77 @@ To install using pip:
 # Requirements
 * Python 3.6 or higher.
 
-# Examples
+# @capturelogs
+`capturelogs(logger=None, level=None, display_logs=DisplayLogs.FAILURE)`
+* logger:  Name of logger, or an actual logger.  Defaults to root logger.
+* level: Log level as a text string.  Defaults to 'INFO'.
+* display_logs: Determines when to display logs.
+    - DisplayLogs.NEVER: Never display the logs.  The logs will always be discarded.
+        * This is the current behavior of `unittest.assertLogs()`.
+    - DisplayLogs.FAILURE: Display the logs only if the test case fails. (default)
+        * This can be useful for debugging test failures because the logs are still written out.
+    - DisplayLogs.ALWAYS: Always displays the logs - pass or fail.
+        * This can be useful when manually running the tests and the developer wants to visually
+          inspect the logging output.
+
+Examples are located at:
+`examples/capturelogs_example.py`
+
+## unittest.assertLogs example
+```
+class CaptureLogsExample(unittest.TestCase):
+    def test_assert_logs(self):
+        """Verify logs using built-in self.assertLogs()."""
+        with self.assertLogs('foo', level='INFO') as logs:
+            logging.getLogger('foo').info('first message')
+            logging.getLogger('foo.bar').error('second message')
+        self.assertEqual(logs.output, ['INFO:foo:first message',
+                                       'ERROR:foo.bar:second message'])
+```
+ 
+## @capturelogs example
+```
+import unittest
+import logging
+from loggingtestcase import capturelogs
+
+
+class CaptureLogsExample(unittest.TestCase):
+    @capturelogs('foo', level='INFO')
+    def test_capture_logs(self, logs):
+        """Verify logs using @capturelogs decorator."""
+        logging.getLogger('foo').info('first message')
+        logging.getLogger('foo.bar').error('second message')
+
+        self.assertEqual(logs.output, ['INFO:foo:first message',
+                                       'ERROR:foo.bar:second message'])
+```
+
+In the above example, there is less clutter and indenting inside of the test function.  For
+this simple example, it doesn't matter.  But if the test involves multiple patches and
+`self.assertRaises` and many other context managers, the function becomes crowded very quickly.
+The `@capturelogs` function decorator allows the developer to reduce the contents and indent
+level inside of the function.
+ 
+## @capturelogs display example
+```
+import unittest
+import logging
+from loggingtestcase import capturelogs, DisplayLogs
+
+
+class CaptureLogsExample(unittest.TestCase):
+    @capturelogs('foo', level='INFO', display_logs=DisplayLogs.ALWAYS)
+    def test_always_display_logs(self, logs):
+        """The logs are always written to the original handler(s)."""
+        logging.getLogger('foo').info('first message')
+        self.assertTrue(False)
+        self.assertEqual(logs.output, ['INFO:foo:first message'])
+```
+
+In the above example, the test fails, the logs are be displayed.
+
+# LoggingTestCase Examples
 ## Example1
 `examples/example1.py`
 
@@ -80,6 +158,10 @@ class Example1(LoggingTestCase):
         raise FileNotFoundError("Failed to open file.")
 ```
 
+In the above example, notice how `test_pass()` and `test_fail()` do not have any function
+decorators or context managers.  The captured logs are automatically available in
+`self.captured_logs.output`.
+
 # Tests
 ## Manual Tests
 ### `tests/manual.py`
@@ -99,3 +181,6 @@ This module tests class `LoggingTestCase`.  It uses `subprocess.check_output` to
 The output is examined to verify it is correct.  `loggingtestcase_test.py` run tests in module `simpleloggingtests.py`.
 
 Even though automated tests are included, it is still a good idea to run the manual tests and visually look at the output of each test case.
+
+### tests/capturelogs_test.py
+This module tests `@capturelogs`, defined in `loggingtestcase/capturelogs.py`.

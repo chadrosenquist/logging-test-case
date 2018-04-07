@@ -30,8 +30,7 @@ Created on April 4, 2018
 
 import unittest
 import logging
-
-from loggingtestcase import capturelogs
+from loggingtestcase import capturelogs, DisplayLogs
 
 
 class CaptureLogsExample(unittest.TestCase):
@@ -55,6 +54,13 @@ class CaptureLogsExample(unittest.TestCase):
                                        'ERROR:foo.bar:second message'])
         self.assertEqual(logs.records[0].message, 'first message')
         self.assertEqual(logs.records[1].message, 'second message')
+
+    @capturelogs('foo', level='INFO', display_logs=DisplayLogs.ALWAYS)
+    def test_always_display_logs(self, logs):
+        """The logs are always written to the original handler(s)."""
+        logging.getLogger('foo').info('first message')
+        self.assertTrue(False)
+        self.assertEqual(logs.output, ['INFO:foo:first message'])
 
 
 if __name__ == '__main__':
