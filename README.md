@@ -7,7 +7,7 @@ This project provides the function decorator `@capturelogs`.
 `@capturelogs` is similar to `unittest.assertLogs()`, but
 it is a function decorator, reducing the clutter inside the test function.
 
-This project provides the class `LoggingTestCase`, which inherits from `unittest.assertLogs()`.
+This project provides the class `LoggingTestCase`, which inherits from `unittest.TestCase`.
 For every test run, logs are automatically captured to `self.captured_logs`.
 If the test fails, the contents of `self.captured_logs` are written to the test output for easy debugging.
 
@@ -161,6 +161,16 @@ class Example1(LoggingTestCase):
 In the above example, notice how `test_pass()` and `test_fail()` do not have any function
 decorators or context managers.  The captured logs are automatically available in
 `self.captured_logs.output`.
+
+# Changelog
+## release-1.1.1
+Added `README.rst` so this readme shows up on PyPI.
+
+## release-1.1
+Added `@capturelogs`.
+
+## release-1.0
+Added `LoggingTestCase`.
 
 # Tests
 ## Manual Tests
