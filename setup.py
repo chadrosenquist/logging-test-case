@@ -1,8 +1,7 @@
-#from distutils.core import setup
 from setuptools import setup
 
 setup(name='logging-test-case',
-      version='1.1-SNAPSHOT',
+      version='1.1',
       description='Provides class LoggingTestCase to help test log files.',
       author='Chad Rosenquist',
       author_email='ChadRosenquist@hotmail.com',
