@@ -28,7 +28,7 @@ Created on April 4, 2018
 
 import logging
 from functools import wraps
-from enum import Enum, auto
+from enum import Enum
 
 
 class DisplayLogs(Enum):
@@ -39,9 +39,9 @@ class DisplayLogs(Enum):
         * FAILURE: Display the logs only if the test case fails.
         * ALWAYS: Always displays the logs - pass or fail.
     """
-    NEVER = auto()
-    FAILURE = auto()
-    ALWAYS = auto()
+    NEVER = 1
+    FAILURE = 2
+    ALWAYS = 3
 
 
 def capturelogs(logger=None, level=None, display_logs=DisplayLogs.FAILURE):
