@@ -103,7 +103,8 @@ def capturelogs(logger=None, level=None, display_logs=DisplayLogs.FAILURE):
 
             try:
                 # Call the function, adding the captured_logs as an argument.
-                return_value = func(*args, handler.captured_logs, **kwargs)
+                args = list(args) + [handler.captured_logs]
+                return_value = func(*args, **kwargs)
                 return return_value
 
             except Exception:
