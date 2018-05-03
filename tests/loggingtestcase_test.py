@@ -42,7 +42,7 @@ def run_test(command):
                                          universal_newlines=True)
     except subprocess.CalledProcessError as error:
         output = error.output
-    
+
     return output
 
 
@@ -58,7 +58,7 @@ class LoggingTestCaseTest(unittest.TestCase):
         self.assertNotIn("SimpleLogging Critical", output)
         self.assertNotIn("SimpleLogging Error", output)
         self.assertNotIn("SimpleLogging Warning", output)
-    
+
     def test_failure(self):
         """
         This test fails.  Logs should be written to the console.
@@ -91,7 +91,7 @@ class LoggingTestCaseTest(unittest.TestCase):
     def test_success_no_logs(self):
         """
         Tests success with no logs written out.
-        
+s
         By default, assertLogs() throws an exception if no logs are written.
         So this test case verifies that exception is correctly handled.
         """
@@ -128,10 +128,10 @@ class LoggingTestCaseTest(unittest.TestCase):
         This test fails.  Logs should be written to the console.
         Only the critical and error message should be written out.
         """
-        output = run_test("tests.simpleloggingtests.SimpleLoggingTestsErrAndCrit.test_failure_error_and_critical")
+        output =run_test("tests.simpleloggingtests.SimpleLoggingTestsErrAndCrit.test_failure_error_and_critical")
         self.assertIn("CRITICAL:tests.simplelogging:SimpleLogging Critical", output)
         self.assertIn("ERROR:tests.simplelogging:SimpleLogging Error", output)
-        self.assertNotIn("WARNING:tests.simplelogging:SimpleLogging Warning", output)        
+        self.assertNotIn("WARNING:tests.simplelogging:SimpleLogging Warning", output)
 
 
 if __name__ == "__main__":

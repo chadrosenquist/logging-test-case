@@ -34,6 +34,7 @@ from loggingtestcase import capturelogs, DisplayLogs
 
 
 class CaptureLogsExample(unittest.TestCase):
+    """An example on how to capture logs."""
     @capturelogs('foo', level='INFO')
     def test_capture_logs(self, logs):
         """Verify logs using @capturelogs decorator."""
