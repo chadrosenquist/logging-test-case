@@ -129,9 +129,13 @@ class LoggingTestCase(unittest.TestCase):
         if result is None:
             super(LoggingTestCase, self).run(result)
         else:
-            before_failures = len(result.failures)
-            before_errors = len(result.errors)
-
+            try:
+                before_failures = len(result.failures)
+                before_errors = len(result.errors)
+            except AttributeError:
+                before_failures = 0
+                before_errors = 0
+            
             # Run the test case, capturing logs.
             # assertLogs throws an AssertionError if no logging is written.  Because there could be
             # test cases that do not log anything, this code captures that exception and ignores it.
@@ -145,12 +149,24 @@ class LoggingTestCase(unittest.TestCase):
                 else:
                     raise
 
-            after_failures = len(result.failures)
-            after_errors = len(result.errors)
+            add_logs = True
+
+            try:
+                after_failures = len(result.failures)
+                after_errors = len(result.errors)
+            except AttributeError:
+                # Detect pytest's TestCaseFunction, which can be used to
+                # determine the error counts, however that wouldnt help
+                # as adding logs is not possible with pytest
+                if hasattr(result, '_excinfo'):
+                    add_logs = False
+                else:
+                    raise
 
             # If the number of failures or errors increased, add the logs to the output
             # for that test case.
-            if self.captured_logs.records:
+            if add_logs and len(self.captured_logs.records) != 0:
+
                 if after_failures > before_failures:
                     result.failures[-1] = (result.failures[-1][0], result.failures[-1][1] + "\n"
                                            + self._capture_logs_to_string(self.captured_logs))
