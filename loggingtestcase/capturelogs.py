@@ -39,9 +39,9 @@ class DisplayLogs(Enum):
         * FAILURE: Display the logs only if the test case fails.
         * ALWAYS: Always displays the logs - pass or fail.
     """
-    NEVER = 0
-    FAILURE = 1
-    ALWAYS = 2
+    NEVER = 1
+    FAILURE = 2
+    ALWAYS = 3
 
 
 def capturelogs(logger=None, level=None, display_logs=DisplayLogs.FAILURE):
@@ -106,7 +106,8 @@ def capturelogs(logger=None, level=None, display_logs=DisplayLogs.FAILURE):
 
             try:
                 # Call the function, adding the captured_logs as an argument.
-                return_value = func(*args, handler.captured_logs, **kwargs)
+                args = list(args) + [handler.captured_logs]
+                return_value = func(*args, **kwargs)
                 return return_value
 
             except Exception:

@@ -35,6 +35,7 @@ import unittest
 def run_test(command):
     """Runs a test case and returns the output."""
     new_command = 'python -m unittest ' + command
+    new_command = new_command.split()
     try:
         output = subprocess.check_output(new_command,
                                          stderr=subprocess.STDOUT,
