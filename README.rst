@@ -186,6 +186,19 @@ are automatically available in ``self.captured_logs.output``.
 Changelog
 =========
 
+release-1.2
+-----------
+Fixed the following error on Python < 3.6:
+
+::
+
+    /usr/local/lib/python3.5/dist-packages/loggingtestcase/capturelogs.py:31: in <module>
+        from enum import Enum, auto
+    E   ImportError: cannot import name 'auto'
+
+This is because ``enum.auto()`` is new in Python 3.6.  To preserve backward compatibility,
+``auto()`` is no longer used.
+
 release-1.1.2
 -------------
 
