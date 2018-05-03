@@ -18,7 +18,7 @@ with io.open(os.path.join(cwd, 'README.rst'), encoding='utf-8') as f:
 
 setup(
     name='logging-test-case',
-    version='1.2',
+    version='1.3',
     description='Provides class LoggingTestCase to help test log files.',
     long_description=long_description,
     keywords='unit testing log files logging regression logging-test-case loggingtestcase',
@@ -27,5 +27,5 @@ setup(
     url='https://github.com/chadrosenquist/logging-test-case',
     packages=['loggingtestcase'],
     license='MIT',
-    python_requires='>=3'
+    python_requires='>=3.4'
 )

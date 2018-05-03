@@ -34,7 +34,7 @@ To install using pip:
 Requirements
 ============
 
--  Python 3.6 or higher.
+-  Python 3.4 or higher.
 
 @capturelogs
 ============
@@ -185,6 +185,15 @@ are automatically available in ``self.captured_logs.output``.
 
 Changelog
 =========
+
+release-1.3
+-----------
+* Support for Python 3.4, 3.5, and 3.6.
+    -  Previously only Python 3.6 worked.
+* Support for pytest.
+    - Previously only unittest worked.  Now both unittest and pytest work.
+
+Thanks to jayvdb on GitHub for providing both fixes!
 
 release-1.2
 -----------

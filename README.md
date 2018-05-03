@@ -25,7 +25,7 @@ To install using pip:
 `pip install logging-test-case`
 
 # Requirements
-* Python 3.6 or higher.
+* Python 3.4 or higher.
 
 # @capturelogs
 `capturelogs(logger=None, level=None, display_logs=DisplayLogs.FAILURE)`
@@ -163,6 +163,14 @@ decorators or context managers.  The captured logs are automatically available i
 `self.captured_logs.output`.
 
 # Changelog
+## release-1.3
+* Support for Python 3.4, 3.5, and 3.6.
+   -  Previously only Python 3.6 worked.
+* Support for pytest.
+   - Previously only unittest worked.  Now both unittest and pytest work.
+
+Thanks to jayvdb on GitHub for providing both fixes!
+
 ## release-1.2
 Fixed the following error on Python < 3.6:
 ```
