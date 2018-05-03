@@ -36,6 +36,7 @@ from loggingtestcase import capturelogs, DisplayLogs
 
 
 class CaptureLogsTestCase(unittest.TestCase):
+    """Tests for capturing log files."""
     @capturelogs('foo', level='INFO')
     def test_capture_logs(self, logs):
         """Verify logs using @capturelogs decorator."""
@@ -131,7 +132,8 @@ class DisplayLogsTestCase(unittest.TestCase):
 
         # Verify the logs are captured.
         self.assertMultiLineEqual(stream.getvalue(),
-                                  'INFO:foo:Failed to open file!\nDEBUG:foo:Check file permissions.\n')
+                                  'INFO:foo:Failed to open file!'
+                                  '\nDEBUG:foo:Check file permissions.\n')
 
     # noinspection PyUnusedLocal
     @capturelogs('foo', level='DEBUG')
@@ -182,7 +184,8 @@ class DisplayLogsTestCase(unittest.TestCase):
         self._success_test_display()
 
         # Verify the logs are not captured.
-        self.assertEqual(stream.getvalue(), 'INFO:foo:Failed to open file!\nDEBUG:foo:Check file permissions.\n')
+        self.assertEqual(stream.getvalue(),
+                         'INFO:foo:Failed to open file!\nDEBUG:foo:Check file permissions.\n')
 
     # noinspection PyUnusedLocal
     @capturelogs('foo', level='DEBUG', display_logs=DisplayLogs.ALWAYS)

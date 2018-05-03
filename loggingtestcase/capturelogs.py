@@ -28,7 +28,7 @@ Created on April 4, 2018
 
 import logging
 from functools import wraps
-from enum import Enum, auto
+from enum import Enum
 
 
 class DisplayLogs(Enum):
@@ -39,13 +39,14 @@ class DisplayLogs(Enum):
         * FAILURE: Display the logs only if the test case fails.
         * ALWAYS: Always displays the logs - pass or fail.
     """
-    NEVER = auto()
-    FAILURE = auto()
-    ALWAYS = auto()
+    NEVER = 1
+    FAILURE = 2
+    ALWAYS = 3
 
 
 def capturelogs(logger=None, level=None, display_logs=DisplayLogs.FAILURE):
-    """Very similar to self.assertLogs() except can be used a function decorator, reducing clutter in test functions.
+    """Very similar to self.assertLogs() except can be used a function decorator,
+        reducing clutter in test functions.
 
     :param logger: Name of logger, or an actual logger.  Defaults to root logger.
     :param level: Log level as a text string.  Defaults to 'INFO'.
@@ -83,11 +84,13 @@ def capturelogs(logger=None, level=None, display_logs=DisplayLogs.FAILURE):
 
     """
     def decorate(func):
+        """Sets the logger and log level."""
         log = _set_the_logger(logger)
         log_level = _set_the_level(level)
 
         @wraps(func)
         def wrapper(*args, **kwargs):
+            """Captures the logs."""
             assertion_error_raised = False
 
             # Capture the logs.
@@ -103,7 +106,8 @@ def capturelogs(logger=None, level=None, display_logs=DisplayLogs.FAILURE):
 
             try:
                 # Call the function, adding the captured_logs as an argument.
-                return_value = func(*args, handler.captured_logs, **kwargs)
+                args = list(args) + [handler.captured_logs]
+                return_value = func(*args, **kwargs)
                 return return_value
 
             except Exception:
@@ -135,6 +139,7 @@ def _set_the_logger(logger):
 def _set_the_level(level):
     if level:
         # noinspection PyProtectedMember
+        # pylint: disable=protected-access
         return logging._nameToLevel.get(level, level)
     else:
         return logging.INFO
