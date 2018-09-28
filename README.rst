@@ -74,11 +74,12 @@ unittest.assertLogs example
 
     import unittest
     import logging
-    from loggingtestcase import capturelogs
+
+    from loggingtestcase
 
 
     class CaptureLogsExample(unittest.TestCase):
-        @capturelogs('foo', level='INFO')
+        @loggingtestcase.capturelogs('foo', level='INFO')
         def test_capture_logs(self, logs):
             """Verify logs using @capturelogs decorator."""
             logging.getLogger('foo').info('first message')
@@ -101,11 +102,13 @@ contents and indent level inside of the function.
 
     import unittest
     import logging
-    from loggingtestcase import capturelogs, DisplayLogs
+
+    import loggingtestcase
 
 
     class CaptureLogsExample(unittest.TestCase):
-        @capturelogs('foo', level='INFO', display_logs=DisplayLogs.ALWAYS)
+        @loggingtestcase.capturelogs('foo', level='INFO',
+                                     display_logs=loggingtestcase.DisplayLogs.ALWAYS)
         def test_always_display_logs(self, logs):
             """The logs are always written to the original handler(s)."""
             logging.getLogger('foo').info('first message')
@@ -126,10 +129,11 @@ Example1
 
     import unittest
     import logging
-    from loggingtestcase import LoggingTestCase
+
+    import loggingtestcase
 
 
-    class Example1(LoggingTestCase):
+    class Example1(loggingtestcase.LoggingTestCase):
 
         def __init__(self, methodName='runTest', testlogger=None, testlevel=None):
             """

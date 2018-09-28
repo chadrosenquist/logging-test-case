@@ -27,10 +27,11 @@ Created on Dec 23, 2016
 """
 import unittest
 import logging
-from loggingtestcase import LoggingTestCase
+
+import loggingtestcase
 
 
-class Example1(LoggingTestCase):
+class Example1(loggingtestcase.LoggingTestCase):
     """Example on how to use LoggingTestCase."""
 
     def __init__(self, methodName='runTest', testlogger=None, testlevel=None):

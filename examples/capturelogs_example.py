@@ -30,12 +30,13 @@ Created on April 4, 2018
 
 import unittest
 import logging
-from loggingtestcase import capturelogs, DisplayLogs
+
+import loggingtestcase
 
 
 class CaptureLogsExample(unittest.TestCase):
     """An example on how to capture logs."""
-    @capturelogs('foo', level='INFO')
+    @loggingtestcase.capturelogs('foo', level='INFO')
     def test_capture_logs(self, logs):
         """Verify logs using @capturelogs decorator."""
         logging.getLogger('foo').info('first message')
@@ -56,7 +57,8 @@ class CaptureLogsExample(unittest.TestCase):
         self.assertEqual(logs.records[0].message, 'first message')
         self.assertEqual(logs.records[1].message, 'second message')
 
-    @capturelogs('foo', level='INFO', display_logs=DisplayLogs.ALWAYS)
+    @loggingtestcase.capturelogs('foo', level='INFO',
+                                 display_logs=loggingtestcase.DisplayLogs.ALWAYS)
     def test_always_display_logs(self, logs):
         """The logs are always written to the original handler(s)."""
         logging.getLogger('foo').info('first message')

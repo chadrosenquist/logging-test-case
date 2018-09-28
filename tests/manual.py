@@ -29,11 +29,11 @@ Created on Dec 23, 2016
 """
 import unittest
 
-from loggingtestcase import LoggingTestCase
+import loggingtestcase
 from tests.simplelogging import SimpleLogging
 
 
-class ManualTest(LoggingTestCase):
+class ManualTest(loggingtestcase.LoggingTestCase):
     """
     This class is for manually testing LoggingTestCase.
     By default, all the tests are disabled.

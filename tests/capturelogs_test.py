@@ -32,12 +32,12 @@ import unittest
 import logging
 from io import StringIO
 
-from loggingtestcase import capturelogs, DisplayLogs
+import loggingtestcase
 
 
 class CaptureLogsTestCase(unittest.TestCase):
     """Tests for capturing log files."""
-    @capturelogs('foo', level='INFO')
+    @loggingtestcase.capturelogs('foo', level='INFO')
     def test_capture_logs(self, logs):
         """Verify logs using @capturelogs decorator."""
         logging.getLogger('foo').info('first message')
@@ -47,7 +47,7 @@ class CaptureLogsTestCase(unittest.TestCase):
         self.assertEqual(logs.records[0].message, 'first message')
         self.assertEqual(logs.records[1].message, 'second message')
 
-    @capturelogs('foo', level='ERROR')
+    @loggingtestcase.capturelogs('foo', level='ERROR')
     def test_capture_logs_2(self, logs):
         """Verify logs using @capturelogs decorator, using a different level."""
         logging.getLogger('foo').info('first message')
@@ -55,7 +55,7 @@ class CaptureLogsTestCase(unittest.TestCase):
 
         self.assertEqual(logs.output, ['ERROR:foo.bar:second message'])
 
-    @capturelogs('foo')
+    @loggingtestcase.capturelogs('foo')
     def test_default_log_level(self, logs):
         """Verify defaults to INFO."""
         logging.getLogger('foo').info('first message')
@@ -65,7 +65,7 @@ class CaptureLogsTestCase(unittest.TestCase):
         self.assertEqual(logs.output, ['INFO:foo:first message',
                                        'ERROR:foo.bar:second message'])
 
-    @capturelogs(logging.getLogger('foo'), 'INFO')
+    @loggingtestcase.capturelogs(logging.getLogger('foo'), 'INFO')
     def test_logger_passed_in(self, logs):
         """Tests with a logger passed in, instead of a log name."""
         logging.getLogger('foo').info('first message')
@@ -78,7 +78,7 @@ class CaptureLogsTestCase(unittest.TestCase):
         self._logging_test_function()
         self.assertEqual(foo_logger.level, logging.DEBUG)
 
-    @capturelogs('foo', level='INFO')
+    @loggingtestcase.capturelogs('foo', level='INFO')
     def _logging_test_function(self, logs):
         pass
 
@@ -90,7 +90,7 @@ class CaptureLogsTestCase(unittest.TestCase):
             self._logging_test_function_exception()
         self.assertEqual(foo_logger.level, logging.DEBUG)
 
-    @capturelogs('foo', level='INFO')
+    @loggingtestcase.capturelogs('foo', level='INFO')
     def _logging_test_function_exception(self, logs):
         raise ValueError('test')
 
@@ -100,7 +100,7 @@ class CaptureLogsTestCase(unittest.TestCase):
         self.assertEqual(return_value, 'one | two')
 
     # noinspection PyUnusedLocal
-    @capturelogs('foo', level='INFO')
+    @loggingtestcase.capturelogs('foo', level='INFO')
     def _arguments_and_return(self, argument1, logs, keyword_one='hello'):
         return '{0} | {1}'.format(argument1, keyword_one)
 
@@ -136,7 +136,7 @@ class DisplayLogsTestCase(unittest.TestCase):
                                   '\nDEBUG:foo:Check file permissions.\n')
 
     # noinspection PyUnusedLocal
-    @capturelogs('foo', level='DEBUG')
+    @loggingtestcase.capturelogs('foo', level='DEBUG')
     def _failed_test(self, logs):
         logging.getLogger('foo').info('Failed to open file!')
         logging.getLogger('foo').debug('Check file permissions.')
@@ -154,7 +154,8 @@ class DisplayLogsTestCase(unittest.TestCase):
         self.assertEqual(stream.getvalue(), '')
 
     # noinspection PyUnusedLocal
-    @capturelogs('foo', level='DEBUG', display_logs=DisplayLogs.NEVER)
+    @loggingtestcase.capturelogs('foo', level='DEBUG',
+                                 display_logs=loggingtestcase.DisplayLogs.NEVER)
     def _failed_test_discard(self, logs):
         logging.getLogger('foo').info('Failed to open file!')
         logging.getLogger('foo').debug('Check file permissions.')
@@ -171,7 +172,7 @@ class DisplayLogsTestCase(unittest.TestCase):
         self.assertEqual(stream.getvalue(), '')
 
     # noinspection PyUnusedLocal
-    @capturelogs('foo', level='DEBUG')
+    @loggingtestcase.capturelogs('foo', level='DEBUG')
     def _success_test_discard(self, logs):
         logging.getLogger('foo').info('Failed to open file!')
         logging.getLogger('foo').debug('Check file permissions.')
@@ -188,7 +189,8 @@ class DisplayLogsTestCase(unittest.TestCase):
                          'INFO:foo:Failed to open file!\nDEBUG:foo:Check file permissions.\n')
 
     # noinspection PyUnusedLocal
-    @capturelogs('foo', level='DEBUG', display_logs=DisplayLogs.ALWAYS)
+    @loggingtestcase.capturelogs('foo', level='DEBUG',
+                                 display_logs=loggingtestcase.DisplayLogs.ALWAYS)
     def _success_test_display(self, logs):
         logging.getLogger('foo').info('Failed to open file!')
         logging.getLogger('foo').debug('Check file permissions.')

@@ -27,11 +27,11 @@ Created on Dec 26, 2016
 """
 import logging
 
-from loggingtestcase import LoggingTestCase
+import loggingtestcase
 from tests.simplelogging import SimpleLogging
 
 
-class SimpleLoggingTests(LoggingTestCase):
+class SimpleLoggingTests(loggingtestcase.LoggingTestCase):
 
     def setUp(self):
         self.simple_logging = SimpleLogging()
@@ -91,7 +91,7 @@ class SimpleLoggingTests(LoggingTestCase):
         self.assertEqual(self.captured_logs.output, ['WARNING:tests.simplelogging:SimpleLogging Warning'])
 
 
-class SimpleLoggingTestsErrAndCrit(LoggingTestCase):
+class SimpleLoggingTestsErrAndCrit(loggingtestcase.LoggingTestCase):
     """
     The constructor sets the log level to ERROR.  Only CRITICAL
     and ERROR should be written out.
