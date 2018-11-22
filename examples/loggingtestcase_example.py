@@ -31,7 +31,7 @@ import logging
 import loggingtestcase
 
 
-class Example1(loggingtestcase.LoggingTestCase):
+class LoggingTestCaseExample(loggingtestcase.LoggingTestCase):
     """Example on how to use LoggingTestCase."""
 
     def __init__(self, methodName='runTest', testlogger=None, testlevel=None):
@@ -55,9 +55,9 @@ class Example1(loggingtestcase.LoggingTestCase):
         """
         self.logger.info("Starting request...")
         self.logger.info("Done with request.")
-        self.assertEqual(self.captured_logs.output,
-                         ['INFO:examples.example1:Starting request...',
-                          'INFO:examples.example1:Done with request.'])
+        self.assertListEqual(self.captured_logs.output,
+                             ['INFO:examples.loggingtestcase_example:Starting request...',
+                              'INFO:examples.loggingtestcase_example:Done with request.'])
 
     def test_fail(self):
         """
@@ -71,8 +71,8 @@ class Example1(loggingtestcase.LoggingTestCase):
         ERROR: test_fail (examples.example1.Example1)
         ----------------------------------------------------------------------
         Traceback (most recent call last):
-          File "D:\Git\logging-test-case\examples\example1.py", line 42, in test_fail
-            raise FileNotFoundError("Failed to open file.")
+          File "D:\Git\logging-test-case\examples\loggingtestcase_example.py.py", line 61,
+          in test_fail raise FileNotFoundError("Failed to open file.")
         FileNotFoundError: Failed to open file.
 
         ERROR:examples.example1:Failed to open file.

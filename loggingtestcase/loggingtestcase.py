@@ -26,6 +26,7 @@ Created on Dec 22, 2016
 @author: Chad Rosenquist
 """
 
+import contextlib
 import unittest
 
 
@@ -49,14 +50,14 @@ class LoggingTestCase(unittest.TestCase):
     import logging
     from loggingtestcase import LoggingTestCase
 
-    class Example1(LoggingTestCase):
+    class LoggingTestCaseExample(LoggingTestCase):
 
         def __init__(self, methodName='runTest', testlogger=None, testlevel=None):
             '''
             To change the logger or log level, override __init__.
             By default, the root logger is used and the log level is logging.INFO.
             '''
-            #testlevel = logging.ERROR
+            # testlevel = logging.ERROR
             super().__init__(methodName, testlogger, testlevel)
 
         def setUp(self):
@@ -73,9 +74,9 @@ class LoggingTestCase(unittest.TestCase):
             '''
             self.logger.info("Starting request...")
             self.logger.info("Done with request.")
-            self.assertEquals(self.captured_logs.output,
-                              ['INFO:examples.example1:Starting request...',
-                               'INFO:examples.example1:Done with request.'])
+            self.assertListEqual(self.captured_logs.output,
+                                 ['INFO:examples.loggingtestcase_example:Starting request...',
+                                  'INFO:examples.loggingtestcase_example:Done with request.'])
 
         def test_fail(self):
             '''
@@ -89,8 +90,8 @@ class LoggingTestCase(unittest.TestCase):
             ERROR: test_fail (examples.example1.Example1)
             ----------------------------------------------------------------------
             Traceback (most recent call last):
-              File "D:\Git\logging-test-case\examples\example1.py", line 42, in test_fail
-                raise FileNotFoundError("Failed to open file.")
+              File "D:\Git\logging-test-case\examples\loggingtestcase_example.py.py", line 61,
+              in test_fail raise FileNotFoundError("Failed to open file.")
             FileNotFoundError: Failed to open file.
 
             ERROR:examples.example1:Failed to open file.
@@ -98,6 +99,7 @@ class LoggingTestCase(unittest.TestCase):
             '''
             self.logger.error("Failed to open file.")
             raise FileNotFoundError("Failed to open file.")
+
     """
 
     def __init__(self, methodName='runTest', testlogger=None, testlevel=None):
@@ -178,3 +180,33 @@ class LoggingTestCase(unittest.TestCase):
     @staticmethod
     def _capture_logs_to_string(capture_logs):
         return "\n".join(capture_logs.output)
+
+    # pylint: disable=invalid-name
+    @contextlib.contextmanager
+    def assertNoLogs(self):
+        """Fail if messages are logged within the context manager.
+
+        Example::
+
+            # Below will fail the test because logs are emitted.
+            with self.assertNoLogs():
+                logging.getLogger().error('first message')
+
+            # Below will pass because no logs are emitted in the context manager.
+            logging.getLogger().error('first message')
+            with self.assertNoLogs():
+                pass
+            logging.getLogger().error('second message')
+
+        """
+        before_logs = self.captured_logs.output.copy()
+        try:
+            yield
+        finally:
+            after_logs = self.captured_logs.output
+
+            # If any new messages logged, then fail the test.
+            if len(after_logs) > len(before_logs):
+                msg = 'The follow messages were unexpectedly logged:\n    '
+                msg += '\n    '.join(after_logs[len(before_logs):])
+                raise self.failureException(msg)
