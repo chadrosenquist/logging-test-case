@@ -46,7 +46,7 @@ class AssertNoLogsExample(loggingtestcase.LoggingTestCase):
         self.logger = logging.getLogger(__name__)
 
     def test_assert_no_logs_fail(self):
-        """assertNoLogs fails because logs are emitted.
+        """The test fails because logs are emitted.
 
         Here is the output:
         E               AssertionError: The follow messages were unexpectedly logged:
@@ -59,7 +59,7 @@ class AssertNoLogsExample(loggingtestcase.LoggingTestCase):
             self.logger.error('second message')
 
     def test_assert_no_logs_pass(self):
-        """assertNoLogs passes because no logs are emitted inside the context manager."""
+        """The test passes because no logs are emitted inside the context manager."""
         self.logger.error('first message')
         with self.assertNoLogs():
             pass

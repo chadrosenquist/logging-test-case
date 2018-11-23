@@ -14,7 +14,8 @@ This project provides the class ``LoggingTestCase``, which inherits from
 ``unittest.TestCase``. For every test run, logs are automatically
 captured to ``self.captured_logs``. If the test fails, the contents of
 ``self.captured_logs`` are written to the test output for easy
-debugging.
+debugging.  ``LoggingTestCase`` provides context manager ``assertNoLogs``
+to verify no logs were emitted within the context.
 
 -  Use ``@capturelogs`` if only a few tests involve log files.
 -  Use ``LoggingTestCase`` if most of the tests involve logs. This
@@ -182,9 +183,64 @@ Example1
             self.logger.error("Failed to open file.")
             raise FileNotFoundError("Failed to open file.")
 
+
+    if __name__ == "__main__":
+        unittest.main()
+
 In the above example, notice how ``test_pass()`` and ``test_fail()`` do
 not have any function decorators or context managers. The captured logs
 are automatically available in ``self.captured_logs.output``.
+
+Example2 - assertNoLogs
+-----------------------
+
+``examples/assertnologs_example1.py``
+
+::
+
+    import unittest
+    import logging
+
+    import loggingtestcase
+
+
+    class AssertNoLogsExample(loggingtestcase.LoggingTestCase):
+        """Example on how to use LoggingTestCase and no logging."""
+
+        def __init__(self, methodName='runTest', testlogger=None, testlevel=None):
+            """
+            To change the logger or log level, override __init__.
+            By default, the root logger is used and the log level is logging.INFO.
+            """
+            # testlevel = logging.ERROR
+            super().__init__(methodName, testlogger, testlevel)
+
+        def setUp(self):
+            self.logger = logging.getLogger(__name__)
+
+        def test_assert_no_logs_fail(self):
+            """The test fails because logs are emitted.
+
+            Here is the output:
+            E               AssertionError: The follow messages were unexpectedly logged:
+            E                   ERROR:examples.assertnologs_example1:first message
+            E                   ERROR:examples.assertnologs_example1:second message
+
+            """
+            with self.assertNoLogs():
+                self.logger.error('first message')
+                self.logger.error('second message')
+
+        def test_assert_no_logs_pass(self):
+            """The test passes because no logs are emitted inside the context manager."""
+            self.logger.error('first message')
+            with self.assertNoLogs():
+                pass
+            self.logger.error('second message')
+
+
+    if __name__ == "__main__":
+        unittest.main()
 
 Changelog
 =========
@@ -261,6 +317,10 @@ capturing the output. The output is examined to verify it is correct.
 
 Even though automated tests are included, it is still a good idea to run
 the manual tests and visually look at the output of each test case.
+
+tests/assertnologs\_test.py
+~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Tests context manager ``assertNoLogs`` in class ``LoggingTestCase``.
 
 tests/capturelogs\_test.py
 ~~~~~~~~~~~~~~~~~~~~~~~~~~
