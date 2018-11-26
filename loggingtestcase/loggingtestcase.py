@@ -90,7 +90,7 @@ class LoggingTestCase(unittest.TestCase):
             ERROR: test_fail (examples.example1.Example1)
             ----------------------------------------------------------------------
             Traceback (most recent call last):
-              File "D:\Git\logging-test-case\examples\loggingtestcase_example.py.py", line 61,
+              File "D:\\Git\\logging-test-case\\examples\\loggingtestcase_example.py.py", line 61,
               in test_fail raise FileNotFoundError("Failed to open file.")
             FileNotFoundError: Failed to open file.
 
@@ -137,7 +137,7 @@ class LoggingTestCase(unittest.TestCase):
             except AttributeError:
                 before_failures = 0
                 before_errors = 0
-            
+
             # Run the test case, capturing logs.
             # assertLogs throws an AssertionError if no logging is written.  Because there could be
             # test cases that do not log anything, this code captures that exception and ignores it.
@@ -167,7 +167,7 @@ class LoggingTestCase(unittest.TestCase):
 
             # If the number of failures or errors increased, add the logs to the output
             # for that test case.
-            if add_logs and len(self.captured_logs.records) != 0:
+            if add_logs and self.captured_logs.records:
 
                 if after_failures > before_failures:
                     result.failures[-1] = (result.failures[-1][0], result.failures[-1][1] + "\n"
