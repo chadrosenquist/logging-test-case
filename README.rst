@@ -40,7 +40,7 @@ Requirements
 @capturelogs
 ============
 
-``capturelogs(logger=None, level=None, display_logs=DisplayLogs.FAILURE)``
+``capturelogs(logger=None, level=None, display_logs=DisplayLogs.FAILURE, assert_no_logs=False)``
 
 * logger: Name of logger, or an actual logger. Defaults to root logger.
 * level: Log level as a text string. Defaults to 'INFO'.
@@ -51,6 +51,7 @@ Requirements
         + This can be useful for debugging test failures because the logs are still written out.
     - DisplayLogs.ALWAYS: Always displays the logs - pass or fail.
         + This can be useful when manually running the tests and the developer wants to visually inspect the logging output.
+* assert_no_logs: If True, raise an AssertionError if any logs are emitted.
 
 Examples are located at: ``examples/capturelogs_example.py``
 
@@ -117,6 +118,32 @@ contents and indent level inside of the function.
             self.assertEqual(logs.output, ['INFO:foo:first message'])
 
 In the above example, the test fails, the logs are be displayed.
+
+@capturelogs assert_no_logs example
+-----------------------------------
+
+::
+
+    import unittest
+    import logging
+
+    import loggingtestcase
+
+
+    class CaptureLogsExample(unittest.TestCase):
+        @loggingtestcase.capturelogs('foo', level='INFO', assert_no_logs=True)
+        def test_assert_no_logs(self, logs):
+            """This test fails because logs are emitted.
+
+            Output::
+
+                AssertionError: In test_assert_no_logs(), the follow messages were unexpectedly logged:
+                    INFO:foo:first message
+                    ERROR:foo.bar:second message
+
+            """
+            logging.getLogger('foo').info('first message')
+            logging.getLogger('foo.bar').error('second message')
 
 LoggingTestCase Examples
 ========================

@@ -105,6 +105,36 @@ class CaptureLogsTestCase(unittest.TestCase):
         return '{0} | {1}'.format(argument1, keyword_one)
 
 
+class CaptureLogsAssertNoLogs(unittest.TestCase):
+    """Tests parameter assert_no_logs."""
+    def test_assert_no_logs(self):
+        """Tests when assert_no_logs=True, an AssertionError is raised if logs are emitted."""
+        with self.assertRaisesRegex(AssertionError,
+                                    r'In _assert_no_logs\(\), '
+                                    r'the follow messages were unexpectedly logged:\n'
+                                    r'    INFO:foo:first message\n'
+                                    r'    ERROR:foo:second message'):
+            self._assert_no_logs()
+
+    # noinspection PyUnusedLocal
+    @loggingtestcase.capturelogs('foo', level='INFO', assert_no_logs=True)
+    def _assert_no_logs(self, logs):
+        """Log a a message, causing capturelogs to raise an AssertionError."""
+        logging.getLogger('foo').info('first message')
+        logging.getLogger('foo').error('second message')
+
+    def test_assert_no_logs_no_except(self):
+        """Tests when assert_no_logs=True and there are no logs emitted,
+        no exceptions are thrown.
+        """
+        self._assert_no_logs_no_logging()
+
+    # noinspection PyUnusedLocal
+    @loggingtestcase.capturelogs('foo', level='INFO', assert_no_logs=True)
+    def _assert_no_logs_no_logging(self, logs):
+        pass
+
+
 class DisplayLogsTestCase(unittest.TestCase):
     """Tests for displaying the logs.
 

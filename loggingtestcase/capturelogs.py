@@ -44,7 +44,10 @@ class DisplayLogs(Enum):
     ALWAYS = 3
 
 
-def capturelogs(logger=None, level=None, display_logs=DisplayLogs.FAILURE):
+def capturelogs(logger=None,
+                level=None,
+                display_logs=DisplayLogs.FAILURE,
+                assert_no_logs=False):
     """Very similar to self.assertLogs() except can be used a function decorator,
         reducing clutter in test functions.
 
@@ -54,6 +57,7 @@ def capturelogs(logger=None, level=None, display_logs=DisplayLogs.FAILURE):
         * DisplayLogs.NEVER: Never display the logs.  The logs will always be discarded.
         * DisplayLogs.FAILURE: Display the logs only if the test case fails.
         * DisplayLogs.ALWAYS: Always displays the logs - pass or fail.
+    :param assert_no_logs: If True, raise an AssertionError if any logs are emitted.
 
     Example::
 
@@ -82,6 +86,22 @@ def capturelogs(logger=None, level=None, display_logs=DisplayLogs.FAILURE):
             self.assertTrue(False)
             self.assertEqual(logs.output, ['INFO:foo:first message'])
 
+    The following assert_no_logs example::
+
+        import logging
+        import loggingtestcase
+
+        @loggingtestcase.capturelogs('foo', level='INFO', assert_no_logs=True)
+        def test_assert_no_logs(self, logs):
+            logging.getLogger('foo').info('first message')
+            logging.getLogger('foo.bar').error('second message')
+
+    Raises the following exception:
+
+        AssertionError: In test_assert_no_logs(), the follow messages were unexpectedly logged:
+            INFO:foo:first message
+            ERROR:foo.bar:second message
+
     """
     def decorate(func):
         """Sets the logger and log level."""
@@ -108,6 +128,10 @@ def capturelogs(logger=None, level=None, display_logs=DisplayLogs.FAILURE):
                 # Call the function, adding the captured_logs as an argument.
                 args = list(args) + [handler.captured_logs]
                 return_value = func(*args, **kwargs)
+
+                if assert_no_logs:
+                    _check_for_logs_emitted(handler, func)
+
                 return return_value
 
             except Exception:
@@ -127,6 +151,15 @@ def capturelogs(logger=None, level=None, display_logs=DisplayLogs.FAILURE):
                         log.log(record.levelno, record.msg)
         return wrapper
     return decorate
+
+
+def _check_for_logs_emitted(handler, func):
+    """Checks if logs are emitted and raises an AssertionError."""
+    if handler.captured_logs.output:
+        msg = 'In ' + func.__name__
+        msg += '(), the follow messages were unexpectedly logged:\n    '
+        msg += '\n    '.join(handler.captured_logs.output)
+        raise AssertionError(msg)
 
 
 def _set_the_logger(logger):

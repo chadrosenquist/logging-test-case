@@ -65,6 +65,21 @@ class CaptureLogsExample(unittest.TestCase):
         self.assertTrue(False)
         self.assertEqual(logs.output, ['INFO:foo:first message'])
 
+    # noinspection PyUnusedLocal
+    @loggingtestcase.capturelogs('foo', level='INFO', assert_no_logs=True)
+    def test_assert_no_logs(self, logs):
+        """This test fails because logs are emitted.
+
+        Output::
+
+            AssertionError: In test_assert_no_logs(), the follow messages were unexpectedly logged:
+                INFO:foo:first message
+                ERROR:foo.bar:second message
+
+        """
+        logging.getLogger('foo').info('first message')
+        logging.getLogger('foo.bar').error('second message')
+
 
 if __name__ == '__main__':
     unittest.main()
