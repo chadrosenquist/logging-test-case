@@ -272,6 +272,12 @@ Example2 - assertNoLogs
 Changelog
 =========
 
+release-1.4
+-----------
+* Added support for verifying no logs are emitted during a test.
+    - Added method ``assertNoLogs()`` to class ``LoggingTestCase``.
+    - Added parameter ``assert_no_logs`` to function decorator ``capturelogs``.
+
 release-1.3
 -----------
 * Support for Python 3.4, 3.5, and 3.6.
