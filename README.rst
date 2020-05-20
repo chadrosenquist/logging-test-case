@@ -77,7 +77,7 @@ unittest.assertLogs example
     import unittest
     import logging
 
-    from loggingtestcase
+    import loggingtestcase
 
 
     class CaptureLogsExample(unittest.TestCase):
