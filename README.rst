@@ -272,6 +272,10 @@ Example2 - assertNoLogs
 Changelog
 =========
 
+release-1.4.1
+-------------
+* Fixed example in ``README.rst``.  Thanks to julianstirling!
+
 release-1.4
 -----------
 * Added support for verifying no logs are emitted during a test.

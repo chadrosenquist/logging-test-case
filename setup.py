@@ -18,7 +18,7 @@ with io.open(os.path.join(cwd, 'README.rst'), encoding='utf-8') as f:
 
 setup(
     name='logging-test-case',
-    version='1.4',
+    version='1.4.1',
     description='Provides class LoggingTestCase to help test log files.',
     long_description=long_description,
     keywords='unit testing log files logging regression logging-test-case loggingtestcase',
